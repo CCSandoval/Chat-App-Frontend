@@ -36,7 +36,7 @@ function App() {
             <input
               type="text"
               className="my-1 border-2 border-black rounded-lg p-3 font-bold"
-              placeholder="Your name goes here"
+              placeholder="Your username goes here"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
