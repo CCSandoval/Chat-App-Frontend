@@ -4,7 +4,7 @@ import Chat from "./components/Chat";
 import chat from "./img/chat.png";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
-const socket = io.connect("http://localhost:8000");
+const socket = io.connect("https://nameless-headland-16700.herokuapp.com/");
 
 function App() {
   const [username, setUsername] = useState("");
