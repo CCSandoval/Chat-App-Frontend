@@ -5,10 +5,7 @@ import chat from "./img/chat.png";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 
-const IO = io("https://nameless-headland-16700.herokuapp.com/", {
-  withCredentials: true,
-});
-const socket = IO.connect("https://nameless-headland-16700.herokuapp.com/");
+const socket = io.connect("https://powerful-sands-35615.herokuapp.com/");
 
 function App() {
   const [username, setUsername] = useState("");
