@@ -4,7 +4,11 @@ import Chat from "./components/Chat";
 import chat from "./img/chat.png";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
-const socket = io.connect("https://nameless-headland-16700.herokuapp.com/");
+
+const IO = io("https://nameless-headland-16700.herokuapp.com/", {
+  withCredentials: true,
+});
+const socket = IO.connect("https://nameless-headland-16700.herokuapp.com/");
 
 function App() {
   const [username, setUsername] = useState("");
@@ -23,10 +27,7 @@ function App() {
 
   return (
     <div className="h-screen flex flex-col justify-center items-center">
-      <ToastContainer
-        position="top-right"
-        autoClose={2000}
-      />
+      <ToastContainer position="top-right" autoClose={2000} />
       {!showChat ? (
         <>
           <div className="h-screen flex flex-col justify-center items-center">
