@@ -24,18 +24,15 @@ const Chat = ({ socket, username, room }) => {
     }
   };
 
-  useEffect(() => {
-    socket.on("receiveMessages", (data) => {
-      console.log("data: ", data);
-      setMessageList([...data]);
-    });
-    //The backend sends the message, time, user and room as the data to display to the user
-    socket.on("receiveMessage", (data) => {
-      setMessageList([...messageList, data]);
-      console.log("Recibió mensaje: ", data);
-    });
-    console.log("MessageList: ", messageList);
-  }, [socket, messageList]);
+  socket.on("receiveMessage", (data) => {
+    setMessageList([...messageList, data]);
+    console.log("Recibió mensaje: ", data);
+  });
+  
+  socket.on("sendMessages", (data) => {
+    console.log("data: ", data);
+    setMessageList([...data]);
+  });
 
   return (
     <div className="flex flex-col shadow-lg border-2 border-black bg-yellow-700 rounded-lg p-1 my-6 sm:w-96 lg:w-3/12 h-4/6">
