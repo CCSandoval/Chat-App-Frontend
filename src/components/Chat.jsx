@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import ScrollToBottom from "react-scroll-to-bottom";
-const Chat = ({ socket, username, room }) => {
+import { nanoid } from "nanoid";
+
+const Chat = ({ socket, username, room, messages }) => {
   const [currentMessage, setCurrentMessage] = useState("");
-  const [messageList, setMessageList] = useState([]);
+  const [messageList, setMessageList] = useState(messages);
+  const [flag, setFlag] = useState(true);
 
   const sendMessage = async () => {
     if (currentMessage !== "") {
@@ -18,16 +21,17 @@ const Chat = ({ socket, username, room }) => {
       //Sends the message, time, user and room as the data so the backend can display it
       await socket.emit("sendMessage", messageData);
       setMessageList((list) => [...list, messageData]);
-      setCurrentMessage("")
+      setCurrentMessage("");
     }
   };
 
   useEffect(() => {
     //The backend sends the message, time, user and room as the data to display to the user
     socket.on("receiveMessage", (data) => {
-      setMessageList((list) => [...list, data]);
+      setMessageList([...messageList, data]);
     });
-  }, [socket]);
+  }, [socket, flag, messageList]);
+
   return (
     <div className="flex flex-col shadow-lg border-2 border-black bg-yellow-700 rounded-lg p-1 my-6 sm:w-96 lg:w-3/12 h-4/6">
       <div className="border-r-2 border-l-2 border-t-2 border-b-2 bg-white rounded-t-md border-black p-2">
@@ -41,10 +45,11 @@ const Chat = ({ socket, username, room }) => {
           {messageList.map((m) => {
             return (
               <div
+                key={nanoid()}
                 className={
                   !(m.user === username)
-                    ? "transform duration-100 hover:rotate-1 w-48 h-auto my-1 float-left clear-both bg-blue-600 px-3 rounded-t-lg rounded-br-lg"
-                    : "transform duration-100 hover:rotate-1 w-48 h-auto my-1 float-right clear-both bg-green-600 px-3 rounded-t-lg rounded-bl-lg"
+                    ? "transform duration-100 w-48 h-auto my-1 float-left clear-both bg-blue-600 px-3 rounded-t-lg rounded-br-lg"
+                    : "transform duration-100 w-48 h-auto my-1 float-right clear-both bg-green-600 px-3 rounded-t-lg rounded-bl-lg"
                 }
               >
                 <div>
@@ -70,6 +75,7 @@ const Chat = ({ socket, username, room }) => {
           onChange={(e) => setCurrentMessage(e.target.value)}
           onKeyPress={(e) => {
             e.key === "Enter" && sendMessage();
+            setFlag(!flag);
           }}
           type="text"
           placeholder="Write your message!"

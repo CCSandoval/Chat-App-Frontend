@@ -5,17 +5,21 @@ import chat from "./img/chat.png";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 
-const socket = io.connect("https://powerful-sands-35615.herokuapp.com");
+const socket = io.connect("https://chat-app-backend-ccst.herokuapp.com/");
 
 function App() {
   const [username, setUsername] = useState("");
   const [room, setRoom] = useState("");
   const [showChat, setShowChat] = useState(false);
+  const [messages, setMessages] = useState([])
 
   const joinRoom = () => {
     if (username !== "" && room !== "") {
       //socket.emit() sendas as a string the event to call and the second parameter is the room id the user wants to join
       socket.emit("joinRoom", { room, username });
+      socket.on("receiveMessages", (data) => {
+        setMessages([...data]);
+      }); 
       setShowChat(true);
     } else {
       toast.error("You didn't input a room id or a username");
@@ -81,7 +85,17 @@ function App() {
           </div>
         </>
       ) : (
-        <Chat socket={socket} username={username} room={room} />
+        <div className="w-screen h-screen flex flex-col justify-center items-center">
+          <Chat socket={socket} username={username} room={room} messages={messages} />
+          <button
+            className="duration-200 hover:bg-red-500 bg-red-600 p-3 rounded-lg text-white text-2xl font-bold"
+            onClick={() => {
+              setShowChat(false);
+            }}
+          >
+            Cerrar
+          </button>
+        </div>
       )}
     </div>
   );
